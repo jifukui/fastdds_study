@@ -28,7 +28,11 @@
 
 namespace dds {
 namespace domain {
-
+/**
+ * @brief Construct a new Domain Participant:: Domain Participant object
+ * 域参与者初始化
+ * @param did 域id
+ */
 DomainParticipant::DomainParticipant(
         uint32_t did)
     : dds::core::Reference<detail::DomainParticipant>(
@@ -37,7 +41,14 @@ DomainParticipant::DomainParticipant(
                 eprosima::fastdds::dds::PARTICIPANT_QOS_DEFAULT))
 {
 }
-
+/**
+ * @brief Construct a new Domain Participant:: Domain Participant object
+ * 域参与者初始化
+ * @param id 域id
+ * @param qos qos
+ * @param listener 监听器 
+ * @param mask 掩码
+ */
 DomainParticipant::DomainParticipant(
         uint32_t id,
         const dds::domain::qos::DomainParticipantQos& qos,
@@ -51,7 +62,10 @@ DomainParticipant::DomainParticipant(
             mask))
 {
 }
-
+/**
+ * @brief Destroy the Domain Participant:: Domain Participant object
+ * 析构函数
+ */
 DomainParticipant::~DomainParticipant()
 {
 }
@@ -67,12 +81,21 @@ DomainParticipant::~DomainParticipant()
 //{
 //    return dynamic_cast<Listener*>(this->delegate()->get_listener());
 //}
-
+/**
+ * @brief 
+ * 获取qos策略
+ * 域参与者的qos实例
+ * @return const dds::domain::qos::DomainParticipantQos& 
+ */
 const dds::domain::qos::DomainParticipantQos& DomainParticipant::qos() const
 {
     return this->delegate()->get_qos();
 }
-
+/**
+ * @brief 
+ * 设置qos策略
+ * @param qos 
+ */
 void DomainParticipant::qos(
         const dds::domain::qos::DomainParticipantQos& qos)
 {
@@ -113,14 +136,22 @@ void DomainParticipant::qos(
 //        this->delegate()->get_current_time(now);
 //        return core::Time(now.seconds, now.nanosec);
 //}
-
+/**
+ * @brief 
+ * 获取默认qos
+ * @return dds::domain::qos::DomainParticipantQos 
+ */
 dds::domain::qos::DomainParticipantQos DomainParticipant::default_participant_qos()
 {
     qos::DomainParticipantQos qos;
     eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->get_default_participant_qos(qos);
     return qos;
 }
-
+/**
+ * @brief 
+ * 设置默认qos
+ * @param qos 
+ */
 void DomainParticipant::default_participant_qos(
         const ::dds::domain::qos::DomainParticipantQos& qos)
 {
@@ -135,12 +166,21 @@ void DomainParticipant::default_participant_qos(
         throw dds::core::UnsupportedError("Unsupported values on DomainParticipantQos");
     }
 }
-
+/**
+ * @brief 
+ * 获取默认发布者qos
+ * @return dds::pub::qos::PublisherQos 
+ */
 dds::pub::qos::PublisherQos DomainParticipant::default_publisher_qos() const
 {
     return this->delegate()->get_default_publisher_qos();
 }
-
+/**
+ * @brief 
+ * 设置默认发布者qos
+ * @param qos 
+ * @return DomainParticipant& 
+ */
 DomainParticipant& DomainParticipant::default_publisher_qos(
         const ::dds::pub::qos::PublisherQos& qos)
 {
@@ -155,12 +195,21 @@ DomainParticipant& DomainParticipant::default_publisher_qos(
     }
     return *this;
 }
-
+/**
+ * @brief 
+ * 获取默认订阅者qos
+ * @return dds::sub::qos::SubscriberQos 
+ */
 dds::sub::qos::SubscriberQos DomainParticipant::default_subscriber_qos() const
 {
     return this->delegate()->get_default_subscriber_qos();
 }
-
+/**
+ * @brief 
+ * 设置默认订阅者qos
+ * @param qos 
+ * @return DomainParticipant& 
+ */
 DomainParticipant& DomainParticipant::default_subscriber_qos(
         const ::dds::sub::qos::SubscriberQos& qos)
 {
@@ -175,12 +224,21 @@ DomainParticipant& DomainParticipant::default_subscriber_qos(
     }
     return *this;
 }
-
+/**
+ * @brief 
+ * 获取默认主题qos
+ * @return dds::topic::qos::TopicQos 
+ */
 dds::topic::qos::TopicQos DomainParticipant::default_topic_qos() const
 {
     return this->delegate()->get_default_topic_qos();
 }
-
+/**
+ * @brief 
+ * 设置默认主题qos
+ * @param qos 
+ * @return DomainParticipant& 
+ */
 DomainParticipant& DomainParticipant::default_topic_qos(
         const dds::topic::qos::TopicQos& qos)
 {
@@ -195,14 +253,24 @@ DomainParticipant& DomainParticipant::default_topic_qos(
     }
     return *this;
 }
-
+/**
+ * @brief 
+ * 运算符<<重载
+ * @param qos 
+ * @return DomainParticipant& 
+ */
 DomainParticipant& DomainParticipant::operator <<(
         const dds::domain::qos::DomainParticipantQos& qos)
 {
     this->qos(qos);
     return *this;
 }
-
+/**
+ * @brief 
+ * 运算符>>重载
+ * @param qos 
+ * @return const DomainParticipant& 
+ */
 const DomainParticipant& DomainParticipant::operator >>(
         dds::domain::qos::DomainParticipantQos& qos) const
 {

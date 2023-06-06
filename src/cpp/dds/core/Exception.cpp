@@ -16,7 +16,10 @@
  */
 
 #include <dds/core/Exception.hpp>
-
+/**
+ * @brief 
+ * 定义逻辑错误
+ */
 #define DEFINE_LOGIC_ERROR_EXCEPTION(ERROR) \
     ERROR::ERROR( \
     const std::string& msg)  \
@@ -28,7 +31,10 @@
         , std::logic_error(src.what()){} \
     ERROR::~ERROR() throw(){} \
     const char* ERROR::what() const throw() { return this->std::logic_error::what();}
-
+/**
+ * @brief 
+ * 运行时错误
+ */
 #define DEFINE_RUNTIME_ERROR_EXCEPTION(ERROR) \
     ERROR::ERROR( \
     const std::string& msg)  \
@@ -40,7 +46,10 @@
         , std::runtime_error(src.what()){} \
     ERROR::~ERROR() throw(){} \
     const char* ERROR::what() const throw() { return this->std::runtime_error::what();}
-
+/**
+ * @brief 
+ * 非法参数异常
+ */
 #define DEFINE_INVALID_ARGUMENT_EXCEPTION(ERROR) \
     ERROR::ERROR( \
     const std::string& msg)  \
