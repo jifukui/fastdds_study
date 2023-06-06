@@ -20,5 +20,8 @@
 #include <dds/core/types.hpp>
 
 using namespace dds::core;
-
+/**
+ * @brief 
+ * 定义null_type的值
+ */
 OMG_DDS_API const null_type dds::core::null;
