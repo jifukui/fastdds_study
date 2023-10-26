@@ -56,6 +56,14 @@ namespace eprosima {
 namespace fastdds {
 namespace dds {
 
+
+/**
+ * @brief 
+ * 返回质量服务的模式是否是
+ * @param qos 
+ * @return true 
+ * @return false 
+ */
 static bool qos_has_pull_mode_request(
         const DataWriterQos& qos)
 {
@@ -63,6 +71,10 @@ static bool qos_has_pull_mode_request(
     return (nullptr != push_mode) && ("false" == *push_mode);
 }
 
+/**
+ * @brief 
+ * 写数据实例
+ */
 class DataWriterImpl::LoanCollection
 {
 public:
@@ -72,7 +84,14 @@ public:
         : loans_(get_collection_limits(config))
     {
     }
-
+    /**
+     * @brief 
+     * 添加
+     * @param data 
+     * @param payload 
+     * @return true 
+     * @return false 
+     */
     bool add_loan(
             void* data,
             PayloadInfo_t& payload)
@@ -81,7 +100,14 @@ public:
         assert(data == payload.payload.data + SerializedPayload_t::representation_header_size);
         return loans_.push_back(payload);
     }
-
+    /**
+     * @brief 
+     * 检查然后删除
+     * @param data 
+     * @param payload 
+     * @return true 删除成功 
+     * @return false 删除失败
+     */
     bool check_and_remove_loan(
             void* data,
             PayloadInfo_t& payload)
@@ -105,7 +131,12 @@ public:
     }
 
 private:
-
+    /**
+     * @brief Get the collection limits object
+     * 获取
+     * @param config 
+     * @return ResourceLimitedContainerConfig 
+     */
     static ResourceLimitedContainerConfig get_collection_limits(
             const PoolConfig& config)
     {
@@ -150,7 +181,11 @@ fastrtps::rtps::RTPSWriter* DataWriterImpl::create_rtps_writer(
 {
     return RTPSDomain::createRTPSWriter(p, watt, payload_pool, hist, listen);
 }
-
+/**
+ * @brief 
+ * 写数据使能
+ * @return ReturnCode_t 
+ */
 ReturnCode_t DataWriterImpl::enable()
 {
     assert(writer_ == nullptr);
@@ -340,7 +375,10 @@ ReturnCode_t DataWriterImpl::enable()
 
     return ReturnCode_t::RETCODE_OK;
 }
-
+/**
+ * @brief 
+ * 写数据禁能
+ */
 void DataWriterImpl::disable()
 {
     set_listener(nullptr);
@@ -374,7 +412,13 @@ DataWriterImpl::~DataWriterImpl()
 
     delete user_datawriter_;
 }
-
+/**
+ * @brief 
+ * 
+ * @param sample 
+ * @param initialization 
+ * @return ReturnCode_t 
+ */
 ReturnCode_t DataWriterImpl::loan_sample(
         void*& sample,
         LoanInitializationKind initialization)
@@ -450,7 +494,12 @@ ReturnCode_t DataWriterImpl::loan_sample(
 
     return ReturnCode_t::RETCODE_OK;
 }
-
+/**
+ * @brief 
+ * 忽略
+ * @param sample 
+ * @return ReturnCode_t 
+ */
 ReturnCode_t DataWriterImpl::discard_loan(
         void*& sample)
 {
@@ -842,7 +891,10 @@ InstanceHandle_t DataWriterImpl::get_instance_handle() const
 {
     return guid();
 }
-
+/**
+ * @brief 
+ * 发布质量服务更新
+ */
 void DataWriterImpl::publisher_qos_updated()
 {
     if (writer_ != nullptr)
@@ -852,7 +904,12 @@ void DataWriterImpl::publisher_qos_updated()
         publisher_->rtps_participant()->updateWriter(writer_, get_topic_attributes(qos_, *topic_, type_), wqos);
     }
 }
-
+/**
+ * @brief 
+ * 设置质量服务
+ * @param qos 
+ * @return ReturnCode_t 
+ */
 ReturnCode_t DataWriterImpl::set_qos(
         const DataWriterQos& qos)
 {
@@ -917,34 +974,58 @@ ReturnCode_t DataWriterImpl::set_qos(
 
     return ReturnCode_t::RETCODE_OK;
 }
-
+/**
+ * @brief 
+ * 获取质量服务
+ * @return const DataWriterQos& 
+ */
 const DataWriterQos& DataWriterImpl::get_qos() const
 {
     return qos_;
 }
-
+/**
+ * @brief 
+ * 设置监听器
+ * @param listener 
+ * @return ReturnCode_t 
+ */
 ReturnCode_t DataWriterImpl::set_listener(
         DataWriterListener* listener)
 {
     listener_ = listener;
     return ReturnCode_t::RETCODE_OK;
 }
-
+/**
+ * @brief 
+ * 获取监听器
+ * @return const DataWriterListener* 
+ */
 const DataWriterListener* DataWriterImpl::get_listener() const
 {
     return listener_;
 }
-
+/**
+ * @brief 
+ * 获取主题
+ * @return Topic* 
+ */
 Topic* DataWriterImpl::get_topic() const
 {
     return topic_;
 }
-
+/**
+ * @brief 
+ * 获取发布者
+ * @return const Publisher* 
+ */
 const Publisher* DataWriterImpl::get_publisher() const
 {
     return publisher_->get_publisher();
 }
-
+/**
+ * @brief 
+ * 
+ */
 void DataWriterImpl::InnerDataWriterListener::onWriterMatched(
         RTPSWriter* /*writer*/,
         const PublicationMatchedStatus& info)
@@ -1000,14 +1081,22 @@ void DataWriterImpl::InnerDataWriterListener::on_liveliness_lost(
     }
 }
 
+
+/**
+ * @brief 
+ * 等待响应
+ * @param max_wait 
+ * @return ReturnCode_t 
+ */
 ReturnCode_t DataWriterImpl::wait_for_acknowledgments(
         const Duration_t& max_wait)
 {
+    //发布者为空返回未使能
     if (writer_ == nullptr)
     {
         return ReturnCode_t::RETCODE_NOT_ENABLED;
     }
-
+    //
     if (writer_->wait_for_all_acked(max_wait))
     {
         return ReturnCode_t::RETCODE_OK;

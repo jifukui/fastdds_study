@@ -495,6 +495,13 @@ const ReturnCode_t PublisherImpl::get_datawriter_qos_from_profile(
    }
  */
 
+
+/**
+ * @brief 
+ * 
+ * @param max_wait 
+ * @return ReturnCode_t 
+ */
 ReturnCode_t PublisherImpl::wait_for_acknowledgments(
         const Duration_t& max_wait)
 {
